@@ -1,110 +1,134 @@
 package redis
 
 import (
-	"fmt"
-	"sync"
+	"github.com/gogf/gf/container/gmap"
+	"github.com/gogf/gf/errors/gerror"
+	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/text/gregex"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
+	"time"
 )
 
 const (
-	DefaultGroupName   = "default" // Default group name.
+	DefaultGroupName = "default" // Default configuration group name.
+	DefaultRedisPort = 6379      // Default redis port configuration if not passed.
 )
 
-// Config is the configuration management object.
-type Config map[string]ConfigGroup
+var (
+	// Configuration groups.
+	configs = gmap.NewStrAnyMap(true)
+)
 
-// ConfigGroup is a slice of configuration node for specified named group.
-type ConfigGroup []ConfigNode
+// SetConfig sets the global configuration for specified group.
+// If <name> is not passed, it sets configuration for the default group name.
+func SetConfig(config Config, name ...string) {
+	group := DefaultGroupName
+	if len(name) > 0 {
+		group = name[0]
+	}
+	configs.Set(group, config)
+	instances.Remove(group)
 
-// ConfigNode is configuration for one node.
-type ConfigNode struct {
-	Host                 string        // Host of server, ip or domain like: 127.0.0.1, localhost
-	Port                 string        // Port, it's commonly 3306.
-	User                 string        // Authentication username.
-	Pass                 string        // Authentication password.
-	Db                   string        // Default used database name.
-	Prefix               string        // (Optional) Table prefix.
-	PoolSize     		int           `json:"pool"`     // Maximum number of socket connections.
-	MinIdleConns 		int            // Minimum number of idle connections which is useful when establishing
+	glog.Infof(`SetConfig for group "%s": %+v`, group, config)
 }
 
-// configs is internal used configuration object.
-var configs struct {
-	sync.RWMutex
-	config Config // All configurations.
-	group  string // Default configuration group.
+// SetConfigByStr sets the global configuration for specified group with string.
+// If <name> is not passed, it sets configuration for the default group name.
+func SetConfigByStr(str string, name ...string) error {
+	group := DefaultGroupName
+	if len(name) > 0 {
+		group = name[0]
+	}
+	config, err := ConfigFromStr(str)
+	if err != nil {
+		return err
+	}
+	configs.Set(group, config)
+	instances.Remove(group)
+	return nil
 }
 
-func init() {
-	configs.config = make(Config)
-	configs.group = DefaultGroupName
+// GetConfig returns the global configuration with specified group name.
+// If <name> is not passed, it returns configuration of the default group name.
+func GetConfig(name ...string) (config Config, ok bool) {
+	group := DefaultGroupName
+	if len(name) > 0 {
+		group = name[0]
+	}
+	if v := configs.Get(group); v != nil {
+		return v.(Config), true
+	}
+	return Config{}, false
 }
 
-// SetConfig sets the global configuration for package.
-// It will overwrite the old configuration of package.
-func SetConfig(config Config) {
-	configs.Lock()
-	defer configs.Unlock()
-	configs.config = config
+// RemoveConfig removes the global configuration with specified group.
+// If <name> is not passed, it removes configuration of the default group name.
+func RemoveConfig(name ...string) {
+	group := DefaultGroupName
+	if len(name) > 0 {
+		group = name[0]
+	}
+	configs.Remove(group)
+	instances.Remove(group)
+
+	glog.Infof(`RemoveConfig: %s`, group)
 }
 
-// SetConfigGroup sets the configuration for given group.
-func SetConfigGroup(group string, nodes ConfigGroup) {
-	configs.Lock()
-	defer configs.Unlock()
-	configs.config[group] = nodes
+// ConfigFromStr parses and returns config from given str.
+// Eg: host:port[,db,pass?maxIdle=x&maxActive=x&idleTimeout=x&maxConnLifetime=x]
+func ConfigFromStr(str string) (config Config, err error) {
+	array, _ := gregex.MatchString(`([^:]+):*(\d*),{0,1}(\d*),{0,1}(.*)\?(.+?)`, str)
+	if len(array) == 6 {
+		parse, _ := gstr.Parse(array[5])
+		config = Config{
+			Host: array[1],
+			Port: gconv.Int(array[2]),
+			Db:   gconv.Int(array[3]),
+			Pass: array[4],
+		}
+		if config.Port == 0 {
+			config.Port = DefaultRedisPort
+		}
+		if v, ok := parse["maxIdle"]; ok {
+			config.MaxIdle = gconv.Int(v)
+		}
+		if v, ok := parse["maxActive"]; ok {
+			config.MaxActive = gconv.Int(v)
+		}
+		if v, ok := parse["idleTimeout"]; ok {
+			config.IdleTimeout = gconv.Duration(v) * time.Second
+		}
+		if v, ok := parse["maxConnLifetime"]; ok {
+			config.MaxConnLifetime = gconv.Duration(v) * time.Second
+		}
+		if v, ok := parse["tls"]; ok {
+			config.TLS = gconv.Bool(v)
+		}
+		if v, ok := parse["skipVerify"]; ok {
+			config.TLSSkipVerify = gconv.Bool(v)
+		}
+		return
+	}
+	array, _ = gregex.MatchString(`([^:]+):*(\d*),{0,1}(\d*),{0,1}(.*)`, str)
+	if len(array) == 5 {
+		config = Config{
+			Host: array[1],
+			Port: gconv.Int(array[2]),
+			Db:   gconv.Int(array[3]),
+			Pass: array[4],
+		}
+		if config.Port == 0 {
+			config.Port = DefaultRedisPort
+		}
+	} else {
+		err = gerror.Newf(`invalid redis configuration: "%s"`, str)
+	}
+	return
 }
 
-// AddConfigNode adds one node configuration to configuration of given group.
-func AddConfigNode(group string, node ConfigNode) {
-	configs.Lock()
-	defer configs.Unlock()
-	configs.config[group] = append(configs.config[group], node)
-}
-
-// AddDefaultConfigNode adds one node configuration to configuration of default group.
-func AddDefaultConfigNode(node ConfigNode) {
-	AddConfigNode(DefaultGroupName, node)
-}
-
-// AddDefaultConfigGroup adds multiple node configurations to configuration of default group.
-func AddDefaultConfigGroup(nodes ConfigGroup) {
-	SetConfigGroup(DefaultGroupName, nodes)
-}
-
-// GetConfig retrieves and returns the configuration of given group.
-func GetConfig(group string) ConfigGroup {
-	configs.RLock()
-	defer configs.RUnlock()
-	return configs.config[group]
-}
-
-// SetDefaultGroup sets the group name for default configuration.
-func SetDefaultGroup(name string) {
-	configs.Lock()
-	defer configs.Unlock()
-	configs.group = name
-}
-
-// GetDefaultGroup returns the { name of default configuration.
-func GetDefaultGroup() string {
-	configs.RLock()
-	defer configs.RUnlock()
-	return configs.group
-}
-
-// IsConfigured checks and returns whether the database configured.
-// It returns true if any configuration exists.
-func IsConfigured() bool {
-	configs.RLock()
-	defer configs.RUnlock()
-	return len(configs.config) > 0
-}
-
-// String returns the node as string.
-func (node *ConfigNode) String() string {
-	return fmt.Sprintf(
-		`%s@%s:%s,%s,%s,%s,%s,%v,%d-%d-%d#%s`,
-		node.User, node.Host, node.Port,
-		node.MinIdleConns, node.PoolSize,
-	)
+// ClearConfig removes all configurations and instances of redis.
+func ClearConfig() {
+	configs.Clear()
+	instances.Clear()
 }

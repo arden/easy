@@ -16,11 +16,10 @@ import (
 )
 
 const (
-	frameCoreComponentNameDatabase = "gfplus.core.component.database"
 	configNodeNameDatabase         = "database"
 )
 
-func Database(name ...string) *gorm.DB {
+func Instance(name ...string) *gorm.DB {
 	group := DefaultGroupName
 	if len(name) > 0 && name[0] != "" {
 		group = name[0]
