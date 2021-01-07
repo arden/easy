@@ -1,16 +1,18 @@
 package example
 
 import (
-	"github.com/arden/gf-plus/example/gorm/service"
-	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/frame/g"
 	"testing"
 )
 
 func TestGorm(t *testing.T) {
-	user, err := service.User.GetByPhone("13590309275")
-	if err != nil {
-		glog.Error(err)
-		return
-	}
-	println(user.Uname)
+	g.Config().SetFileName("config.toml")
+	value := g.Config().GetString("redis")
+	println(value)
+	//user, err := service.User.GetByPhone("13590309275")
+	//if err != nil {
+	//	glog.Error(err)
+	//	return
+	//}
+	//println(user.Uname)
 }

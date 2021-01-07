@@ -1,0 +1,59 @@
+# HTTP Server
+[server]
+Address     = ":8211"
+ServerRoot  = "public"
+ServerAgent = "open-lottery"
+LogPath     = "./log"
+Graceful    = true
+
+# Logger.
+[logger]
+Path        = "./log"
+Level       = "all"
+Stdout      = true
+
+# Template.
+[viewer]
+Path        = "template"
+DefaultFile = "index.html"
+Delimiters  =  ["${", "}"]
+
+# Redis数据库配置
+[redis]
+default = "localhost:6379,0,123456?idleTimeout=600"
+prefix = "hdcj:"
+
+# 数据库连接
+[database]
+[[database.default]]
+host = "localhost"
+port = "3306"
+user = "root"
+pass = "123456"
+name = "choujiang"
+type = "mysql"
+role = "master"
+debug = "true"
+weight = ""
+prefix = ""
+charset = "utf8mb4"
+linkinfo = ""
+maxIdle = "10"
+maxOpen = "100"
+maxLifetime = "30"
+[[database.arden]]
+host = "localhost"
+port = "3306"
+user = "root"
+pass = "123456"
+name = "choujiang"
+type = "mysql"
+role = "master"
+debug = "true"
+weight = ""
+prefix = ""
+charset = "utf8mb4"
+linkinfo = ""
+maxIdle = "10"
+maxOpen = "100"
+maxLifetime = "30"
