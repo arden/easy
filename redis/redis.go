@@ -6,10 +6,14 @@ import (
 	"github.com/gogf/gf/container/gmap"
 	"time"
 )
+type (
+	// RedisClient redis client
+	client = *redis.Client
+)
 
 // Redis client.
 type Redis struct {
-	client *redis.Client
+	client
 	group  string      // Configuration group.
 	config Config      // Configuration.
 }
