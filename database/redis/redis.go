@@ -14,8 +14,8 @@ type (
 // Redis client.
 type Redis struct {
 	client
-	group  string      // Configuration group.
-	config Config      // Configuration.
+	group  string // Configuration group.
+	config Config // Configuration.
 }
 
 // Redis connection.

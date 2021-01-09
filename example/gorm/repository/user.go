@@ -3,8 +3,8 @@ package repository
 import (
 	"errors"
 	"github.com/arden/easy"
+	"github.com/arden/easy/database/gorm/repository"
 	"github.com/arden/easy/example/gorm/model"
-	"github.com/arden/easy/gorm/repository"
 	"github.com/gogf/gf/os/glog"
 	"gorm.io/gorm"
 )
