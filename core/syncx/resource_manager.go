@@ -1,7 +1,7 @@
 package syncx
 
 import (
-	"github.com/arden/gf-plus/core/errorx"
+	"github.com/arden/easy/core/errorx"
 	"io"
 	"sync"
 )

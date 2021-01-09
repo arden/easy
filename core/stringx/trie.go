@@ -1,6 +1,6 @@
 package stringx
 
-import "github.com/arden/gf-plus/core/lang"
+import "github.com/arden/easy/core/lang"
 
 const defaultMask = '*'
 

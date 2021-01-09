@@ -2,9 +2,9 @@ package repository
 
 import (
 	"errors"
-	"github.com/arden/gf-plus"
-	"github.com/arden/gf-plus/example/gorm/model"
-	"github.com/arden/gf-plus/gorm/repository"
+	"github.com/arden/easy"
+	"github.com/arden/easy/example/gorm/model"
+	"github.com/arden/easy/gorm/repository"
 	"github.com/gogf/gf/os/glog"
 	"gorm.io/gorm"
 )
@@ -23,7 +23,7 @@ type userRepository struct {
 }
 
 func newUserRepository(name...string) UserRepository {
-	db := gf_plus.Gorm(name...)
+	db := easy.Gorm(name...)
 	userRepository := &userRepository{
 		repository.NewGormRepository(db, glog.DefaultLogger(), ""),
 	}

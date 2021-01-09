@@ -1,9 +1,9 @@
-package plus
+package easy
 
 import (
 	"fmt"
-	gfplusGorm "github.com/arden/gf-plus/gorm"
 	"gorm.io/gorm"
+	easyGorm "github.com/arden/easy/gorm"
 )
 
 const (
@@ -13,13 +13,13 @@ const (
 // Database returns an instance of database ORM object
 // with specified configuration group name.
 func GetGorm(name ...string) *gorm.DB {
-	group := gfplusGorm.DefaultGroupName
+	group := easyGorm.DefaultGroupName
 	if len(name) > 0 && name[0] != "" {
 		group = name[0]
 	}
 	instanceKey := fmt.Sprintf("%s.%s", frameCoreComponentNameDatabase, group)
 	db := instances.GetOrSetFuncLock(instanceKey, func() interface{} {
-		gormDB := gfplusGorm.Instance(name...)
+		gormDB := easyGorm.Instance(name...)
 		return gormDB
 	})
 	if db != nil {

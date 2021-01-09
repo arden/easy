@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/arden/gf-plus/example/gorm/model"
-	"github.com/arden/gf-plus/example/gorm/repository"
+	"github.com/arden/easy/example/gorm/model"
+	"github.com/arden/easy/example/gorm/repository"
 )
 
 // 中间件管理服务

@@ -2,12 +2,12 @@ package example
 
 import (
 	"context"
-	"github.com/arden/gf-plus"
+	"github.com/arden/easy"
 	"testing"
 	"time"
 )
 
 func TestRedis(t *testing.T) {
-	redisClient := gf_plus.Redis()
+	redisClient := easy.Redis()
 	redisClient.Set(context.Background(), "hdcj:test", "11arden", time.Hour)
 }

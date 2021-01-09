@@ -2,7 +2,7 @@ package stringx
 
 import (
 	"errors"
-	"github.com/arden/gf-plus/core/lang"
+	"github.com/arden/easy/core/lang"
 )
 
 var (
