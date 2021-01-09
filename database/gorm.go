@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/arden/easy"
+	"github.com/arden/easy/app"
 	easyGorm "github.com/arden/easy/database/gorm"
 	"gorm.io/gorm"
 )
@@ -19,7 +19,7 @@ func GetGorm(name ...string) *gorm.DB {
 		group = name[0]
 	}
 	instanceKey := fmt.Sprintf("%s.%s", frameCoreComponentNameDatabase, group)
-	db := easy.Instances.GetOrSetFuncLock(instanceKey, func() interface{} {
+	db := app.Instances.GetOrSetFuncLock(instanceKey, func() interface{} {
 		gormDB := easyGorm.Instance(name...)
 		return gormDB
 	})

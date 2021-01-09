@@ -1,4 +1,4 @@
-package easy
+package app
 
 import (
 	"github.com/gogf/gf/container/gmap"

@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/arden/easy"
+	"github.com/arden/easy/app"
 	easyRedis "github.com/arden/easy/database/redis"
 	"github.com/gogf/gf/frame/gins"
 	"github.com/gogf/gf/util/gconv"
@@ -22,7 +22,7 @@ func GetRedis(name ...string) *easyRedis.Redis {
 		group = name[0]
 	}
 	instanceKey := fmt.Sprintf("%s.%s", frameCoreComponentNameRedis, group)
-	result := easy.Instances.GetOrSetFuncLock(instanceKey, func() interface{} {
+	result := app.Instances.GetOrSetFuncLock(instanceKey, func() interface{} {
 		// If already configured, it returns the redis instance.
 		if _, ok := easyRedis.GetConfig(group); ok {
 			return easyRedis.Instance(group)
