@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	frameCoreComponentNameRedis = "gfplus.core.component.redis"
+	frameCoreComponentNameRedis = "easy.core.component.redis"
 	configNodeNameRedis         = "redis"
 )
 
