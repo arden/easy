@@ -2,12 +2,12 @@ package threading
 
 import (
 	"fmt"
+	"github.com/arden/easy/core/lang"
 	"runtime"
 	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tal-tech/go-zero/core/lang"
 )
 
 func TestWorkerGroup(t *testing.T) {

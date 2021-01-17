@@ -5,11 +5,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tal-tech/go-zero/core/logx"
 )
 
 func init() {
-	logx.Disable()
 }
 
 func TestRescue(t *testing.T) {
