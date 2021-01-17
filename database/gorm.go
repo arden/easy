@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	frameCoreComponentNameDatabase = "gfplus.core.component.database"
+	frameCoreComponentNameDatabase = "easy.core.component.database"
 )
 
 // Database returns an instance of database ORM object
