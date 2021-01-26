@@ -108,8 +108,8 @@ const (
 )
 
 // MustDecodeToInt64 : decode a chinese number string into Int64 without error
-func MustDecodeToInt64(cn string) int64 {
-	res, err := DecodeToInt64(cn)
+func MustDecodeChineseToInt64(chinese string) int64 {
+	res, err := DecodeChineseToInt64(chinese)
 	if err != nil {
 		panic(err)
 	}
@@ -117,8 +117,8 @@ func MustDecodeToInt64(cn string) int64 {
 }
 
 // DecodeToInt64 : decode a chinese number string into Int64
-func DecodeToInt64(cn string) (int64, error) {
-	chars := []rune(cn)
+func DecodeChineseToInt64(chinese string) (int64, error) {
+	chars := []rune(chinese)
 	return decodeToInt64(chars)
 }
 
@@ -183,7 +183,7 @@ var numCn = map[uint64]rune{
 }
 
 // EncodeFromInt64 : convert int64 into Chinese number
-func EncodeFromInt64(num int64) string {
+func EncodeChineseFromInt64(num int64) string {
 	if num == 0 {
 		return "零"
 	}
@@ -265,8 +265,8 @@ func encodeSmallNum(num uint64) (res []rune) {
 }
 
 // MustDecodeToFloat64 : decode a chinese number string into Float64 without error
-func MustDecodeToFloat64(cn string) float64 {
-	res, err := DecodeToFloat64(cn)
+func MustDecodeChineseToFloat64(cn string) float64 {
+	res, err := DecodeChineseToFloat64(cn)
 	if err != nil {
 		panic(err)
 	}
@@ -274,7 +274,7 @@ func MustDecodeToFloat64(cn string) float64 {
 }
 
 // DecodeToFloat64 : decode a chinese number string into Float64
-func DecodeToFloat64(cn string) (float64, error) {
+func DecodeChineseToFloat64(cn string) (float64, error) {
 	chars := []rune(cn)
 	// positive or negative
 	sign := float64(1)
@@ -356,9 +356,9 @@ func decodeAfterDecimalPoint(chars []rune) (res float64, err error) {
 
 // EncodeFromFloat64 : convert float64 into Chinese number
 // 由于float64固然存在的精度问题，本函数可能不会特别精准。所以小数部分最多精确到6位。
-func EncodeFromFloat64(num float64) string {
+func EncodeChineseFromFloat64(num float64) string {
 	if num < 0 {
-		return string(cnNegativePrefix) + EncodeFromFloat64(-num)
+		return string(cnNegativePrefix) + EncodeChineseFromFloat64(-num)
 	}
 	integralPart := math.Floor(num)
 	decimalPart := num - integralPart
