@@ -16,7 +16,7 @@ const (
 
 // 数据返回通用JSON数据结构
 type JsonRes struct {
-	Code     int         `json:"code"`     // 错误码((0:成功, 1:失败, >1:错误码))
+	Code     int         `json:"code"`     // 错误码((0:失败, 1:成功, >1:错误码))
 	Message  string      `json:"message"`  // 提示信息
 	Data     interface{} `json:"data"`     // 返回数据(业务接口定义具体数据结构)
 	Redirect string      `json:"redirect"` // 引导客户端跳转到指定路由
@@ -44,23 +44,43 @@ func JsonExit(r *ghttp.Request, code int, message string, data ...interface{}) {
 }
 
 // 返回标准JSON数据并退出当前HTTP执行函数。
-func JsonFailExit(r *ghttp.Request, message string, data ...interface{}) {
+func JsonFailWithMessageExit(r *ghttp.Request, message string, data ...interface{}) {
 	JsonExit(r, FAIL, message, data...)
 }
 
 // 返回标准JSON数据并退出当前HTTP执行函数。
-func JsonSuccessExit(r *ghttp.Request, message string, data ...interface{}) {
+func JsonSuccessWithMessageExit(r *ghttp.Request, message string, data ...interface{}) {
 	JsonExit(r, SUCCESS, message, data...)
 }
 
-// 返回标准JSON数据并退出当前HTTP执行函数。
-func JsonFail(r *ghttp.Request, message string, data ...interface{}) {
+// 返回标准JSON数据
+func JsonFailWithMessage(r *ghttp.Request, message string, data ...interface{}) {
 	Json(r, FAIL, message, data...)
 }
 
-// 返回标准JSON数据并退出当前HTTP执行函数。
-func JsonSuccess(r *ghttp.Request, message string, data ...interface{}) {
+// 返回标准JSON数据
+func JsonSuccessWithMessage(r *ghttp.Request, message string, data ...interface{}) {
 	Json(r, SUCCESS, message, data...)
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonFailExit(r *ghttp.Request, data ...interface{}) {
+	JsonExit(r, FAIL, "FAIL", data...)
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonSuccessExit(r *ghttp.Request, data ...interface{}) {
+	JsonExit(r, SUCCESS, "OK", data...)
+}
+
+// 返回标准JSON数据
+func JsonFail(r *ghttp.Request, data ...interface{}) {
+	Json(r, FAIL, "FAIL", data...)
+}
+
+// 返回标准JSON数据
+func JsonSuccess(r *ghttp.Request, data ...interface{}) {
+	Json(r, SUCCESS, "OK", data...)
 }
 
 // 返回标准JSON数据引导客户端跳转。
