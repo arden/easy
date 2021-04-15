@@ -5,6 +5,15 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 )
 
+// 自定义业务code码从-101开始
+const (
+	//FAIL 失败
+	FAIL = 0
+
+	//SUCCESS 成功
+	SUCCESS = 1
+)
+
 // 数据返回通用JSON数据结构
 type JsonRes struct {
 	Code     int         `json:"code"`     // 错误码((0:成功, 1:失败, >1:错误码))
@@ -32,6 +41,26 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 func JsonExit(r *ghttp.Request, code int, message string, data ...interface{}) {
 	Json(r, code, message, data...)
 	r.Exit()
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonFailExit(r *ghttp.Request, message string, data ...interface{}) {
+	JsonExit(r, FAIL, message, data...)
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonSuccessExit(r *ghttp.Request, message string, data ...interface{}) {
+	JsonExit(r, SUCCESS, message, data...)
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonFail(r *ghttp.Request, message string, data ...interface{}) {
+	Json(r, FAIL, message, data...)
+}
+
+// 返回标准JSON数据并退出当前HTTP执行函数。
+func JsonSuccess(r *ghttp.Request, message string, data ...interface{}) {
+	Json(r, SUCCESS, message, data...)
 }
 
 // 返回标准JSON数据引导客户端跳转。
