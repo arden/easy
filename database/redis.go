@@ -43,7 +43,8 @@ func GetRedis(name ...string) *easyRedis.Redis {
 				panic(fmt.Sprintf(`configuration for redis not found for group "%s"`, group))
 			}
 		} else {
-			panic(fmt.Sprintf(`incomplete configuration for redis: "redis" node not found in config file "%s"`, config.FilePath()))
+			filePath, _ := config.GetFilePath()
+			panic(fmt.Sprintf(`incomplete configuration for redis: "redis" node not found in config file "%s"`, filePath))
 		}
 		return nil
 	})
