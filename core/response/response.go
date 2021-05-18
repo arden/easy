@@ -8,10 +8,10 @@ import (
 // 自定义业务code码从-101开始
 const (
 	//FAIL 失败
-	FAIL = 0
+	FAIL = 1
 
 	//SUCCESS 成功
-	SUCCESS = 1
+	SUCCESS = 0
 )
 
 // 数据返回通用JSON数据结构
