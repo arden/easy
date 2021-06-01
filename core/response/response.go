@@ -23,7 +23,7 @@ type JsonRes struct {
 	Redirect string      `json:"redirect"` // 引导客户端跳转到指定路由
 	Common struct{
 		Timestamp int64	 `json:"timestamp"` // 时间戳
-	}
+	}					 `json:"common"`
 }
 
 // 返回标准JSON数据。
