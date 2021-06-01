@@ -3,6 +3,7 @@ package response
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/gtime"
 )
 
 // 自定义业务code码从-101开始
@@ -20,6 +21,9 @@ type JsonRes struct {
 	Message  string      `json:"message"`  // 提示信息
 	Data     interface{} `json:"data"`     // 返回数据(业务接口定义具体数据结构)
 	Redirect string      `json:"redirect"` // 引导客户端跳转到指定路由
+	Common struct{
+		Timestamp int64	 `json:"timestamp"` // 时间戳
+	}
 }
 
 // 返回标准JSON数据。
@@ -30,11 +34,21 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 	} else {
 		responseData = g.Map{}
 	}
-	r.Response.WriteJson(JsonRes{
+	err := r.Response.WriteJson(JsonRes{
 		Code:    code,
 		Message: message,
 		Data:    responseData,
+		Common: struct {
+			Timestamp int64 `json:"timestamp"`
+		}(struct {
+			Timestamp int64
+		}{
+			Timestamp: gtime.Now().Timestamp(),
+		}),
 	})
+	if err != nil {
+		return 
+	}
 }
 
 // 返回标准JSON数据并退出当前HTTP执行函数。
@@ -89,12 +103,22 @@ func JsonRedirect(r *ghttp.Request, code int, message, redirect string, data ...
 	if len(data) > 0 {
 		responseData = data[0]
 	}
-	r.Response.WriteJson(JsonRes{
-		Code:     code,
-		Message:  message,
-		Data:     responseData,
+	err := r.Response.WriteJson(JsonRes{
+		Code:    code,
+		Message: message,
+		Data:    responseData,
+		Common: struct {
+			Timestamp int64 `json:"timestamp"`
+		}(struct {
+			Timestamp int64
+		}{
+			Timestamp: gtime.Now().Timestamp(),
+		}),
 		Redirect: redirect,
 	})
+	if err != nil {
+		return 
+	}
 }
 
 // 返回标准JSON数据引导客户端跳转，并退出当前HTTP执行函数。
