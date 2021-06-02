@@ -22,7 +22,7 @@ type JsonRes struct {
 	Data     interface{} `json:"data"`     // 返回数据(业务接口定义具体数据结构)
 	Redirect string      `json:"redirect,omitempty"` // 引导客户端跳转到指定路由
 	Common struct{
-		Timestamp int64	 `json:"timestamp"` // 时间戳
+		Timestamp int64	 `json:"timeStamp"` // 时间戳
 	}					 `json:"common,omitempty"`
 }
 
@@ -39,7 +39,7 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 		Message: message,
 		Data:    responseData,
 		Common: struct {
-			Timestamp int64 `json:"timestamp"`
+			Timestamp int64 `json:"timeStamp"`
 		}(struct {
 			Timestamp int64
 		}{
@@ -108,7 +108,7 @@ func JsonRedirect(r *ghttp.Request, code int, message, redirect string, data ...
 		Message: message,
 		Data:    responseData,
 		Common: struct {
-			Timestamp int64 `json:"timestamp"`
+			Timestamp int64 `json:"timeStamp"`
 		}(struct {
 			Timestamp int64
 		}{
