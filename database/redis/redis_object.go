@@ -235,7 +235,7 @@ func durationToIntSecond(duration time.Duration) int {
 	return int(duration) / 1e9
 }
 
-func (db *Redis) HmsetMapInfo(ctx context.Context, key string, values map[string]interface{}) *BoolCmd {
+func (db *Redis) HMSetMapInfo(ctx context.Context, key string, values map[string]interface{}) *BoolCmd {
 
 	for k , v := range values {
 		values[k] = gconv.String(v)
