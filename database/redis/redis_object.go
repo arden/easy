@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gogf/gf/errors/gerror"
+	"github.com/gogf/gf/util/gconv"
 	"time"
 )
 
@@ -232,4 +233,13 @@ DurationToIntSecond 将time.Duration类型转换为值为秒数的int类型
 */
 func durationToIntSecond(duration time.Duration) int {
 	return int(duration) / 1e9
+}
+
+func (db *Redis) HmsetMapInfo(ctx context.Context, key string, values map[string]interface{}) *BoolCmd {
+
+	for k , v := range values {
+		values[k] = gconv.String(v)
+	}
+
+	return db.client.HMSet(context.Background(), key, values)
 }

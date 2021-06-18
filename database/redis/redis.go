@@ -149,3 +149,4 @@ func (r *Redis) SetMaxConnLifetime(value time.Duration) {
 func (r *Redis) GetClient() *redis.Client {
 	return r.client
 }
+
