@@ -13,6 +13,7 @@ import (
 const (
 	DefaultGroupName = "default" // Default configuration group name.
 	DefaultRedisPort = 6379      // Default redis port configuration if not passed.
+	DefaultMaxActive = 50
 )
 
 var (
@@ -95,6 +96,8 @@ func ConfigFromStr(str string) (config Config, err error) {
 		}
 		if v, ok := parse["maxActive"]; ok {
 			config.MaxActive = gconv.Int(v)
+		} else {
+			config.MaxActive = DefaultMaxActive
 		}
 		if v, ok := parse["idleTimeout"]; ok {
 			config.IdleTimeout = gconv.Duration(v) * time.Second
