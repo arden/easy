@@ -13,7 +13,7 @@ import (
 const (
 	DefaultGroupName = "default" // Default configuration group name.
 	DefaultRedisPort = 6379      // Default redis port configuration if not passed.
-	DefaultMaxActive = 50
+	DefaultMaxActive = 50        // Default redis max active connections.
 )
 
 var (
